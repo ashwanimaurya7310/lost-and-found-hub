@@ -1,0 +1,52 @@
+{
+  "placeholderImages": [
+    {
+      "id": "item-1",
+      "description": "Black headphones on a wooden table.",
+      "imageUrl": "https://images.unsplash.com/photo-1672925216556-c995d23aab2e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxoZWFkcGhvbmVzJTIwdGVjaG5vbG9neXxlbnwwfHx8fDE3NTg3Nzk2MjB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "headphones technology"
+    },
+    {
+      "id": "item-2",
+      "description": "A classic novel with a worn cover.",
+      "imageUrl": "https://images.unsplash.com/photo-1496104679561-38d3af73f9b0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxib29rJTIwbm92ZWx8ZW58MHx8fHwxNzU4NzE1MTUwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "book novel"
+    },
+    {
+      "id": "item-3",
+      "description": "Set of silver keys on a key ring.",
+      "imageUrl": "https://images.unsplash.com/photo-1665574220508-c065bf90c738?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxrZXlzJTIwbWV0YWx8ZW58MHx8fHwxNzU4Nzc5NjIwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "keys metal"
+    },
+    {
+      "id": "item-4",
+      "description": "A blue water bottle with stickers.",
+      "imageUrl": "https://images.unsplash.com/photo-1530711654140-23ef9ad45094?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHx3YXRlciUyMGJvdHRsZXxlbnwwfHx8fDE3NTg2ODc1MjB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "water bottle"
+    },
+    {
+      "id": "item-5",
+      "description": "A black leather wallet.",
+      "imageUrl": "https://images.unsplash.com/photo-1676276550341-00e94a953058?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx3YWxsZXQlMjBsZWF0aGVyfGVufDB8fHx8MTc1ODY5NDY2OHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wallet leather"
+    },
+    {
+      "id": "item-6",
+      "description": "A university-branded hoodie.",
+      "imageUrl": "https://images.unsplash.com/photo-1612239385910-d28e5731d9f3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxob29kaWUlMjBjbG90aGluZ3xlbnwwfHx8fDE3NTg3Nzk2MjB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "hoodie clothing"
+    },
+    {
+      "id": "item-7",
+      "description": "A silver laptop on a desk.",
+      "imageUrl": "https://images.unsplash.com/photo-1737868131581-6379cdee4ec3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxsYXB0b3AlMjB0ZWNobm9sb2d5fGVufDB8fHx8MTc1ODc3OTYyMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "laptop technology"
+    },
+    {
+      "id": "item-8",
+      "description": "A pair of black-framed glasses.",
+      "imageUrl": "https://images.unsplash.com/photo-1715417588003-136d53c0559e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxnbGFzc2VzJTIwZmFzaGlvbnxlbnwwfHx8fDE3NTg3Nzk2MjB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "glasses fashion"
+    }
+  ]
+}

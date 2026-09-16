@@ -1,0 +1,20 @@
+[
+  {
+    "id": "student_1789032870244_9yif",
+    "name": "Ashwani Maurya",
+    "email": "ashwanimaurya7310@gmail.com",
+    "phone": "7310314041",
+    "studentId": "5350023",
+    "password": "Ashwani@641",
+    "registeredAt": "2026-09-10T09:34:30.244Z"
+  },
+  {
+    "id": "student-demo-1",
+    "name": "Aarav Sharma",
+    "email": "student@ashoka.com",
+    "phone": "+91 98765 43210",
+    "studentId": "ASHOKA-2024-001",
+    "password": "Admin",
+    "registeredAt": "2024-09-01T00:00:00.000Z"
+  }
+]
