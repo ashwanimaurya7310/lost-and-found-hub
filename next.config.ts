@@ -1,21 +1,9 @@
-import type {NextConfig} from 'next';
-
+import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
-  /* config options here */
-  // @ts-ignore
-  allowedDevOrigins: [
-    'localhost',
-    '127.0.0.1',
-    '192.168.50.121',
-    '*.trycloudflare.com',
-  ],
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  output: 'export',
+  basePath: '/lost-and-found-hub',
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -37,6 +25,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-};
 
-export default nextConfig;
+  // baaki aapki existing settings...
+};
