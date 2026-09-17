@@ -225,6 +225,15 @@ export const registeredStudentsStore = {
 
     return { success: true, student };
   },
+
+  updateStudentPassword(email: string, newPassword: string): boolean {
+    const all = getStoredStudents();
+    const idx = all.findIndex((s) => s.email.toLowerCase() === email.toLowerCase());
+    if (idx === -1) return false;
+    all[idx] = { ...all[idx], password: newPassword, resetPasswordToken: undefined, resetPasswordExpiry: undefined };
+    saveStoredStudents(all);
+    return true;
+  },
 };
 
 // Session Store
@@ -531,20 +540,27 @@ export function useItems() {
     (item) => item.moderationStatus === 'pending' || item.isPublic === false
   );
 
-  const userIdentifier = currentUser?.email || currentUser?.id || 'user-current';
-  const myItems = items.filter(
-    (item) =>
-      item.userId === userIdentifier ||
-      item.userId === currentUser?.email ||
-      item.userId === currentUser?.studentId ||
-      item.userId === 'user-current'
-  );
+  const userIdentifier = currentUser?.email || currentUser?.id || '';
+  const myItems = currentUser
+    ? items.filter(
+        (item) =>
+          (userIdentifier && item.userId === userIdentifier) ||
+          (currentUser.email && item.userId === currentUser.email) ||
+          (currentUser.studentId && item.userId === currentUser.studentId)
+      )
+    : [];
+
 
   const myLostCount = myItems.filter((i) => i.status === 'lost').length;
   const myFoundCount = myItems.filter((i) => i.status === 'found').length;
-  const myClaims = claims.filter(
-    (c) => c.userId === userIdentifier || c.userId === 'user-current'
-  );
+  const myClaims = currentUser
+    ? claims.filter(
+        (c) =>
+          (userIdentifier && c.userId === userIdentifier) ||
+          (currentUser.email && c.userId === currentUser.email)
+      )
+    : [];
+
 
   const addItem = useCallback((item: Omit<Item, 'id'> & { id?: string }) => {
     const created = itemsStore.add(item);

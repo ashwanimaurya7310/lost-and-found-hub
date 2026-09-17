@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -166,271 +167,299 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] px-4 py-8 bg-gradient-to-b from-background via-muted/20 to-muted/40">
-      <div className="w-full max-w-lg">
-        {!registeredStudent ? (
-          <Card className="shadow-2xl border-primary/20 bg-card/95 backdrop-blur">
-            <CardHeader className="text-center space-y-2 pb-4">
-              <div className="mb-2 flex justify-center">
-                <Logo size="lg" />
-              </div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 mx-auto">
-                <UserPlus className="w-3.5 h-3.5" />
-                <span>Student Registration Portal</span>
-              </div>
-              <CardTitle className="text-2xl font-bold tracking-tight">Create Student Account</CardTitle>
-              <CardDescription className="text-xs text-muted-foreground">
-                Register with your details to obtain your verified Student ID and access the Lost & Found portal.
-              </CardDescription>
-            </CardHeader>
+    /* ── Outer page: royal-blue creative background ── */
+    <div
+      className="min-h-[calc(100vh-4rem)] relative flex items-center justify-center overflow-hidden px-4 py-10"
+      style={{ background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 40%, #1e40af 100%)" }}
+    >
+      {/* ── Decorative background elements ── */}
+      {/* Corner circles */}
+      <div className="absolute top-[-120px] right-[-120px] w-96 h-96 rounded-full opacity-25 pointer-events-none" style={{ background: "#60a5fa" }} />
+      <div className="absolute top-[-60px] right-[-60px] w-60 h-60 rounded-full opacity-20 pointer-events-none" style={{ background: "#93c5fd" }} />
+      <div className="absolute bottom-[-100px] left-[-100px] w-72 h-72 rounded-full opacity-20 pointer-events-none" style={{ background: "#60a5fa" }} />
+      <div className="absolute bottom-[15%] right-[5%] w-24 h-24 rounded-full opacity-15 pointer-events-none" style={{ background: "#bfdbfe" }} />
 
-            <CardContent className="space-y-4">
-              <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3.5">
-                {/* Full Name */}
-                <div className="grid gap-1.5">
-                  <Label htmlFor="name" className="text-xs font-semibold flex items-center gap-1.5">
-                    <User className="w-3.5 h-3.5 text-primary" />
-                    Full Name
-                  </Label>
-                  <Input
-                    id="name"
-                    placeholder="e.g. Full Name"
-                    className="h-9 text-sm"
-                    {...register('name')}
-                  />
-                  {errors.name && <p className="text-destructive text-xs">{errors.name.message}</p>}
+      {/* Watermark letters */}
+      <div className="absolute bottom-0 left-0 text-[220px] font-black leading-none select-none pointer-events-none opacity-10" style={{ color: "#93c5fd" }}>R</div>
+      <div className="absolute top-0 right-[12%] text-[150px] font-black leading-none select-none pointer-events-none opacity-10" style={{ color: "#93c5fd" }}>✓</div>
+
+      {/* ── Main two-column card ── */}
+      <div
+        className="relative z-10 w-full max-w-5xl rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row"
+        style={{ background: "linear-gradient(135deg, #0c2568 0%, #0a1e5c 50%, #0d2a80 100%)", minHeight: "600px" }}
+      >
+        {/* ── Left panel: Lost & Found illustration ── */}
+        <div className="hidden lg:flex w-80 xl:w-96 flex-col items-center justify-center relative overflow-hidden select-none shrink-0">
+          {/* Full-panel illustration – Next.js Image handles basePath automatically */}
+          <Image
+            src="/lost-found-illustration.jpg"
+            alt="Lost and Found illustration"
+            fill
+            className="object-cover"
+            priority
+          />
+          {/* Dark overlay for readability */}
+          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(10,30,92,0.45) 0%, rgba(10,30,92,0.2) 100%)" }} />
+
+          {/* Hero badge overlay — centred on image */}
+          <div className="relative z-10 flex flex-col items-center gap-5 text-center px-6">
+            <div
+              className="px-5 py-4 rounded-2xl shadow-2xl text-center"
+              style={{ background: "rgba(0,0,0,0.35)", backdropFilter: "blur(14px)", border: "1px solid rgba(255,255,255,0.2)" }}
+            >
+              <p className="text-white/60 text-[11px] font-semibold uppercase tracking-widest mb-1">Lost &amp; Found Hub</p>
+              <p className="text-white text-2xl font-extrabold leading-tight">Registration</p>
+              <p className="text-emerald-300 text-sm font-bold mt-1">✓ Verified Portal</p>
+            </div>
+
+            <p className="text-white/70 text-xs max-w-[200px] leading-relaxed drop-shadow">
+              Register once to report or claim lost items across campus.
+            </p>
+          </div>
+        </div>
+
+        {/* ── Right panel: frosted-glass form ── */}
+        <div className="flex-1 flex items-start justify-center p-6 lg:p-10 overflow-y-auto">
+          <div className="w-full max-w-md">
+            {!registeredStudent ? (
+              /* ── Registration Form ── */
+              <div
+                className="rounded-2xl p-7 shadow-2xl border border-white/20"
+                style={{ background: "rgba(255,255,255,0.11)", backdropFilter: "blur(18px)", WebkitBackdropFilter: "blur(18px)" }}
+              >
+                {/* Form header */}
+                <div className="mb-6">
+                  <p className="text-blue-200/80 text-[11px] font-semibold tracking-widest uppercase mb-1">Ashoka Institute</p>
+                  <h1 className="text-2xl font-extrabold text-white tracking-tight leading-tight">Create Student Account</h1>
+                  <p className="text-white/50 text-xs mt-1">Register to access the Lost &amp; Found portal.</p>
                 </div>
 
-                {/* Gmail / Email Address */}
-                <div className="grid gap-1.5">
-                  <Label htmlFor="email" className="text-xs font-semibold flex items-center gap-1.5">
-                    <Mail className="w-3.5 h-3.5 text-primary" />
-                    email
-                  </Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="student email"
-                    className="h-9 text-sm"
-                    {...register('email')}
-                  />
-                  {errors.email && <p className="text-destructive text-xs">{errors.email.message}</p>}
-                </div>
+                <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3.5">
+                  {/* Full Name */}
+                  <div className="grid gap-1.5">
+                    <label htmlFor="reg-name" className="text-xs font-semibold text-white/90 flex items-center gap-1.5">
+                      <User className="w-3.5 h-3.5" />Full Name
+                    </label>
+                    <input
+                      id="reg-name"
+                      placeholder="e.g. Full Name"
+                      className="w-full h-10 px-3 rounded-lg bg-white text-gray-800 text-sm placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-blue-400 transition"
+                      {...register('name')}
+                    />
+                    {errors.name && <p className="text-red-300 text-xs">{errors.name.message}</p>}
+                  </div>
 
-                {/* Phone Number */}
-                <div className="grid gap-1.5">
-                  <Label htmlFor="phone" className="text-xs font-semibold flex items-center gap-1.5">
-                    <Phone className="w-3.5 h-3.5 text-primary" />
-                    Phone Number (for claim contact)
-                  </Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    placeholder="+91 ----------"
-                    className="h-9 text-sm"
-                    {...register('phone')}
-                  />
-                  {errors.phone && <p className="text-destructive text-xs">{errors.phone.message}</p>}
-                </div>
+                  {/* Email */}
+                  <div className="grid gap-1.5">
+                    <label htmlFor="reg-email" className="text-xs font-semibold text-white/90 flex items-center gap-1.5">
+                      <Mail className="w-3.5 h-3.5" />Email
+                    </label>
+                    <input
+                      id="reg-email"
+                      type="email"
+                      placeholder="student email"
+                      className="w-full h-10 px-3 rounded-lg bg-white text-gray-800 text-sm placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-blue-400 transition"
+                      {...register('email')}
+                    />
+                    {errors.email && <p className="text-red-300 text-xs">{errors.email.message}</p>}
+                  </div>
 
-                {/* Student ID (Custom or Auto-Generated) */}
-                <div className="grid gap-1.5">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="studentId" className="text-xs font-semibold flex items-center gap-1.5">
-                      <IdCard className="w-3.5 h-3.5 text-primary" />
-                      Student ID
-                    </Label>
+                  {/* Phone */}
+                  <div className="grid gap-1.5">
+                    <label htmlFor="reg-phone" className="text-xs font-semibold text-white/90 flex items-center gap-1.5">
+                      <Phone className="w-3.5 h-3.5" />Phone Number (for claim contact)
+                    </label>
+                    <input
+                      id="reg-phone"
+                      type="tel"
+                      placeholder="+91 ----------"
+                      className="w-full h-10 px-3 rounded-lg bg-white text-gray-800 text-sm placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-blue-400 transition"
+                      {...register('phone')}
+                    />
+                    {errors.phone && <p className="text-red-300 text-xs">{errors.phone.message}</p>}
+                  </div>
+
+                  {/* Student ID */}
+                  <div className="grid gap-1.5">
+                    <div className="flex items-center justify-between">
+                      <label htmlFor="reg-studentId" className="text-xs font-semibold text-white/90 flex items-center gap-1.5">
+                        <IdCard className="w-3.5 h-3.5" />Student ID
+                      </label>
+                      <button
+                        type="button"
+                        onClick={handleGenerateId}
+                        className="text-[11px] text-blue-200 hover:text-white font-medium inline-flex items-center gap-1 transition"
+                      >
+                        <RefreshCw className="w-3 h-3" />Auto-Generate ID
+                      </button>
+                    </div>
+                    <input
+                      id="reg-studentId"
+                      placeholder="Student ID number"
+                      className="w-full h-10 px-3 rounded-lg bg-white text-gray-800 text-sm font-mono tracking-wider font-semibold uppercase placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-blue-400 transition"
+                      {...register('studentId')}
+                    />
+                    {errors.studentId && <p className="text-red-300 text-xs">{errors.studentId.message}</p>}
+                    <p className="text-[11px] text-white/40">This unique Student ID can be used with your password to sign in.</p>
+                  </div>
+
+                  {/* Passwords */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid gap-1.5">
+                      <label htmlFor="reg-password" className="text-xs font-semibold text-white/90 flex items-center gap-1.5">
+                        <Lock className="w-3.5 h-3.5" />Set Password
+                      </label>
+                      <input
+                        id="reg-password"
+                        type="password"
+                        placeholder="••••••••"
+                        className="w-full h-10 px-3 rounded-lg bg-white text-gray-800 text-sm placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-blue-400 transition"
+                        {...register('password')}
+                      />
+                      {errors.password && <p className="text-red-300 text-xs">{errors.password.message}</p>}
+                    </div>
+                    <div className="grid gap-1.5">
+                      <label htmlFor="reg-confirm" className="text-xs font-semibold text-white/90 flex items-center gap-1.5">
+                        <Lock className="w-3.5 h-3.5" />Confirm Password
+                      </label>
+                      <input
+                        id="reg-confirm"
+                        type="password"
+                        placeholder="••••••••"
+                        className="w-full h-10 px-3 rounded-lg bg-white text-gray-800 text-sm placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-blue-400 transition"
+                        {...register('confirmPassword')}
+                      />
+                      {errors.confirmPassword && <p className="text-red-300 text-xs">{errors.confirmPassword.message}</p>}
+                    </div>
+                  </div>
+
+                  {/* Submit */}
+                  <div className="pt-1">
                     <button
-                      type="button"
-                      onClick={handleGenerateId}
-                      className="text-[11px] text-primary hover:underline font-medium inline-flex items-center gap-1"
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full h-11 rounded-lg font-bold text-sm text-white flex items-center justify-center gap-2 shadow-lg transition-all disabled:opacity-60 active:scale-[0.98]"
+                      style={{ background: "linear-gradient(135deg, #059669 0%, #10b981 100%)" }}
                     >
-                      <RefreshCw className="w-3 h-3" />
-                      Auto-Generate ID
+                      <UserPlus className="w-4 h-4" />
+                      {isSubmitting ? 'Registering...' : 'Register & Obtain Student ID'}
                     </button>
                   </div>
-                  <Input
-                    id="studentId"
-                    placeholder="Student ID number"
-                    className="h-9 text-sm font-mono tracking-wider font-semibold uppercase"
-                    {...register('studentId')}
-                  />
-                  {errors.studentId && (
-                    <p className="text-destructive text-xs">{errors.studentId.message}</p>
-                  )}
-                  <p className="text-[11px] text-muted-foreground">
-                    This unique Student ID can be used along with your password to sign in.
+                </form>
+
+                {/* Divider + quick fill */}
+                <div className="flex items-center gap-3 mt-4">
+                  <div className="flex-1 h-px bg-white/15" />
+                  <button
+                    type="button"
+                    onClick={handleQuickFill}
+                    className="text-[10px] text-white/50 hover:text-white/80 transition inline-flex items-center gap-1"
+                  >
+                    <Sparkles className="w-3 h-3" />Fill Sample Details
+                  </button>
+                  <div className="flex-1 h-px bg-white/15" />
+                </div>
+
+                {/* Already registered */}
+                <p className="text-center text-[12px] text-white/50 mt-4">
+                  Already registered?{" "}
+                  <Link href="/" className="text-white font-bold hover:underline">
+                    Sign In to your account
+                  </Link>
+                </p>
+              </div>
+            ) : (
+              /* ── Registration Success Card ── */
+              <div
+                className="rounded-2xl overflow-hidden shadow-2xl border border-white/20"
+                style={{ background: "rgba(255,255,255,0.11)", backdropFilter: "blur(18px)", WebkitBackdropFilter: "blur(18px)" }}
+              >
+                <div className="bg-gradient-to-r from-emerald-600 to-teal-600 p-6 text-white text-center space-y-2">
+                  <div className="w-12 h-12 rounded-full bg-white/20 border border-white/30 flex items-center justify-center mx-auto mb-1">
+                    <CheckCircle2 className="w-7 h-7 text-white" />
+                  </div>
+                  <h2 className="text-2xl font-bold tracking-tight">Registration Complete!</h2>
+                  <p className="text-xs text-emerald-100 max-w-sm mx-auto">
+                    Your student profile has been created and verified. Keep your Student ID safe for future logins.
                   </p>
                 </div>
 
-                {/* Passwords grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="grid gap-1.5">
-                    <Label htmlFor="password" className="text-xs font-semibold flex items-center gap-1.5">
-                      <Lock className="w-3.5 h-3.5 text-primary" />
-                      Set Password
-                    </Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder="••••••••"
-                      className="h-9 text-sm"
-                      {...register('password')}
-                    />
-                    {errors.password && (
-                      <p className="text-destructive text-xs">{errors.password.message}</p>
-                    )}
-                  </div>
-
-                  <div className="grid gap-1.5">
-                    <Label
-                      htmlFor="confirmPassword"
-                      className="text-xs font-semibold flex items-center gap-1.5"
-                    >
-                      <Lock className="w-3.5 h-3.5 text-primary" />
-                      Confirm Password
-                    </Label>
-                    <Input
-                      id="confirmPassword"
-                      type="password"
-                      placeholder="••••••••"
-                      className="h-9 text-sm"
-                      {...register('confirmPassword')}
-                    />
-                    {errors.confirmPassword && (
-                      <p className="text-destructive text-xs">{errors.confirmPassword.message}</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Submit button */}
-                <div className="pt-2 flex flex-col gap-2">
-                  <Button
-                    type="submit"
-                    className="w-full font-semibold py-5 shadow-sm text-sm bg-emerald-600 hover:bg-emerald-700 text-white"
-                    disabled={isSubmitting}
-                  >
-                    <UserPlus className="w-4 h-4 mr-2" />
-                    {isSubmitting ? 'Registering...' : 'Register & Obtain Student ID'}
-                  </Button>
-                </div>
-              </form>
-
-              {/* Quick Fill Button */}
-              <div className="pt-2 border-t flex items-center justify-between text-xs text-muted-foreground">
-                <span>Quick Registration:</span>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleQuickFill}
-                  className="h-7 text-xs text-primary hover:text-primary/80 hover:bg-primary/10"
-                >
-                  <Sparkles className="w-3.5 h-3.5 mr-1" />
-                  Fill Sample Details
-                </Button>
-              </div>
-            </CardContent>
-
-            <CardFooter className="bg-muted/40 border-t p-4 flex flex-col gap-2 text-center text-xs">
-              <div className="flex items-center justify-center gap-1">
-                <span className="text-muted-foreground">Already registered?</span>
-                <Link href="/login" className="text-primary font-semibold hover:underline inline-flex items-center">
-                  Sign In to your account
-                  <ArrowRight className="w-3.5 h-3.5 ml-1" />
-                </Link>
-              </div>
-            </CardFooter>
-          </Card>
-        ) : (
-          /* Registration Success & Student ID Card Display */
-          <Card className="shadow-2xl border-emerald-500/30 bg-card/95 backdrop-blur overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <div className="bg-gradient-to-r from-emerald-600 to-teal-600 p-6 text-white text-center space-y-2">
-              <div className="w-12 h-12 rounded-full bg-white/20 border border-white/30 flex items-center justify-center mx-auto mb-1">
-                <CheckCircle2 className="w-7 h-7 text-white" />
-              </div>
-              <h2 className="text-2xl font-bold tracking-tight">Registration Complete!</h2>
-              <p className="text-xs text-emerald-100 max-w-sm mx-auto">
-                Your student profile has been created and verified. Keep your Student ID safe for future logins.
-              </p>
-            </div>
-
-            <CardContent className="p-6 space-y-5">
-              {/* Virtual Student Card */}
-              <div className="rounded-xl border-2 border-primary/20 bg-gradient-to-br from-slate-900 to-slate-950 text-white p-5 shadow-lg relative overflow-hidden">
-                <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
-                  <div className="flex items-center gap-2">
-                    <Logo size="sm" />
-                    <div>
-                      <div className="text-xs font-bold uppercase tracking-wider text-primary">Ashoka Institute</div>
-                      <div className="text-[10px] text-slate-400">Student Identity Card</div>
-                    </div>
-                  </div>
-                  <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-semibold border border-emerald-500/30">
-                    Active
-                  </span>
-                </div>
-
-                <div className="space-y-2.5 text-xs">
-                  <div>
-                    <span className="text-slate-400 text-[10px] uppercase tracking-wider">Student Name</span>
-                    <p className="text-base font-bold text-white">{registeredStudent.name}</p>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2 pt-1 border-t border-slate-800/80">
-                    <div>
-                      <span className="text-slate-400 text-[10px] uppercase tracking-wider">Assigned Student ID</span>
-                      <div className="flex items-center gap-1.5 mt-0.5">
-                        <span className="font-mono text-sm font-bold text-amber-300">
-                          {registeredStudent.studentId}
-                        </span>
-                        <button
-                          onClick={handleCopyId}
-                          title="Copy Student ID"
-                          className="p-1 rounded hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
-                        >
-                          <Copy className="w-3.5 h-3.5" />
-                        </button>
+                <div className="p-6 space-y-5">
+                  {/* Virtual Student Card */}
+                  <div className="rounded-xl border-2 border-primary/20 bg-gradient-to-br from-slate-900 to-slate-950 text-white p-5 shadow-lg relative overflow-hidden">
+                    <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+                      <div className="flex items-center gap-2">
+                        <Logo size="sm" />
+                        <div>
+                          <div className="text-xs font-bold uppercase tracking-wider text-primary">Ashoka Institute</div>
+                          <div className="text-[10px] text-slate-400">Student Identity Card</div>
+                        </div>
                       </div>
-                      {copiedId && <span className="text-[10px] text-emerald-400">Copied!</span>}
+                      <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-semibold border border-emerald-500/30">Active</span>
                     </div>
 
-                    <div>
-                      <span className="text-slate-400 text-[10px] uppercase tracking-wider">Phone</span>
-                      <p className="font-medium text-slate-200 mt-0.5">{registeredStudent.phone}</p>
+                    <div className="space-y-2.5 text-xs">
+                      <div>
+                        <span className="text-slate-400 text-[10px] uppercase tracking-wider">Student Name</span>
+                        <p className="text-base font-bold text-white">{registeredStudent.name}</p>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 pt-1 border-t border-slate-800/80">
+                        <div>
+                          <span className="text-slate-400 text-[10px] uppercase tracking-wider">Assigned Student ID</span>
+                          <div className="flex items-center gap-1.5 mt-0.5">
+                            <span className="font-mono text-sm font-bold text-amber-300">{registeredStudent.studentId}</span>
+                            <button onClick={handleCopyId} title="Copy Student ID" className="p-1 rounded hover:bg-slate-800 text-slate-400 hover:text-white transition-colors">
+                              <Copy className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                          {copiedId && <span className="text-[10px] text-emerald-400">Copied!</span>}
+                        </div>
+                        <div>
+                          <span className="text-slate-400 text-[10px] uppercase tracking-wider">Phone</span>
+                          <p className="font-medium text-slate-200 mt-0.5">{registeredStudent.phone}</p>
+                        </div>
+                      </div>
+
+                      <div className="pt-1 border-t border-slate-800/80">
+                        <span className="text-slate-400 text-[10px] uppercase tracking-wider">Registered Gmail</span>
+                        <p className="font-medium text-slate-200 truncate">{registeredStudent.email}</p>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="pt-1 border-t border-slate-800/80">
-                    <span className="text-slate-400 text-[10px] uppercase tracking-wider">Registered Gmail</span>
-                    <p className="font-medium text-slate-200 truncate">{registeredStudent.email}</p>
+                  {/* Action Buttons */}
+                  <div className="space-y-2.5">
+                    <button
+                      onClick={handleAutoLogin}
+                      className="w-full h-11 rounded-lg font-bold text-sm text-white flex items-center justify-center gap-2 shadow-lg transition-all active:scale-[0.98]"
+                      style={{ background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)" }}
+                    >
+                      <LogIn className="w-4 h-4" />Sign In Now &amp; Enter Portal
+                    </button>
+                    <Link
+                      href="/"
+                      className="w-full h-10 rounded-lg border border-white/25 text-white/80 hover:text-white hover:border-white/50 text-xs font-semibold flex items-center justify-center gap-1.5 transition"
+                    >
+                      Go to Login Page
+                    </Link>
                   </div>
                 </div>
               </div>
+            )}
+          </div>
+        </div>
+      </div>
 
-              {/* Action Buttons */}
-              <div className="space-y-2.5">
-                <Button
-                  onClick={handleAutoLogin}
-                  className="w-full font-bold py-5 shadow-sm text-sm bg-primary hover:bg-primary/90 text-primary-foreground"
-                >
-                  <LogIn className="w-4 h-4 mr-2" />
-                  Sign In Now & Enter Portal
-                </Button>
-
-                <Button
-                  asChild
-                  variant="outline"
-                  className="w-full text-xs font-semibold"
-                >
-                  <Link href="/login">
-                    Go to Login Page
-                  </Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+      {/* Quick-fill dev helper */}
+      <div className="absolute bottom-4 right-4 z-20 opacity-50 hover:opacity-100 transition-opacity">
+        <button
+          type="button"
+          onClick={handleQuickFill}
+          className="text-[10px] text-white bg-white/10 hover:bg-white/20 border border-white/20 rounded-full px-2.5 py-1 font-medium backdrop-blur transition inline-flex items-center gap-1"
+        >
+          <Sparkles className="w-2.5 h-2.5" />Demo Fill
+        </button>
       </div>
     </div>
   );

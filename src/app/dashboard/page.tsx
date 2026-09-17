@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useItems, authStore } from '@/lib/items-store';
+import type { Item } from '@/lib/types';
 import {
   Card,
   CardContent,
@@ -19,6 +20,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -35,11 +44,15 @@ import {
   Package,
   Layers,
   ShieldCheck,
-  AlertCircle,
   ExternalLink,
   IdCard,
   Mail,
   Phone,
+  Eye,
+  MapPin,
+  Calendar,
+  Tag,
+  FileText,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -56,6 +69,9 @@ export default function UserDashboard() {
   const router = useRouter();
   const { toast } = useToast();
 
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [inspectOpen, setInspectOpen] = useState(false);
+
   // Protect User Dashboard: redirect to home/login if not signed in
   useEffect(() => {
     if (isLoaded && !currentUser) {
@@ -70,6 +86,11 @@ export default function UserDashboard() {
       description: 'You have been logged out of your user account.',
     });
     router.replace('/');
+  };
+
+  const openInspect = (item: Item) => {
+    setSelectedItem(item);
+    setInspectOpen(true);
   };
 
   const totalReported = myItems.length;
@@ -153,7 +174,7 @@ export default function UserDashboard() {
         </div>
       </div>
 
-      {/* User Counter Cards (All start from 0 and update dynamically) */}
+      {/* User Counter Cards */}
       <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
         {/* Total Items Reported */}
         <Card className="border shadow-sm hover:shadow-md transition-shadow">
@@ -195,7 +216,7 @@ export default function UserDashboard() {
             <div className="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">
               {myFoundCount}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">Items you found & reported</p>
+            <p className="text-xs text-muted-foreground mt-1">Items you found &amp; reported</p>
           </CardContent>
         </Card>
 
@@ -235,7 +256,7 @@ export default function UserDashboard() {
                 <div>
                   <CardTitle className="text-lg font-bold">Items You Have Reported</CardTitle>
                   <CardDescription>
-                    Review moderation status. Once approved by the administrator, items become visible in the public catalog.
+                    Review your full reporter details and moderation status. Once approved by the administrator, items become visible in the public catalog.
                   </CardDescription>
                 </div>
                 <Button asChild size="sm">
@@ -254,7 +275,7 @@ export default function UserDashboard() {
                   </div>
                   <h3 className="font-semibold text-base">No Items Reported Yet</h3>
                   <p className="text-xs text-muted-foreground max-w-sm mx-auto">
-                    You haven't reported any lost or found items yet. Submit your first report to see live counts and moderation updates.
+                    You haven&apos;t reported any lost or found items yet. Submit your first report to see live counts and moderation updates.
                   </p>
                   <Button asChild size="sm" className="mt-2">
                     <Link href="/report">Report Lost or Found Item</Link>
@@ -268,9 +289,10 @@ export default function UserDashboard() {
                         <TableHead className="w-[70px]">Photo</TableHead>
                         <TableHead>Item Details</TableHead>
                         <TableHead>Type</TableHead>
-                        <TableHead>Location</TableHead>
-                        <TableHead>Date</TableHead>
-                        <TableHead>Admin Moderation</TableHead>
+                        <TableHead>Category</TableHead>
+                        <TableHead>Reporter Info</TableHead>
+                        <TableHead>Location &amp; Date</TableHead>
+                        <TableHead>Admin Status</TableHead>
                         <TableHead className="text-right">Action</TableHead>
                       </TableRow>
                     </TableHeader>
@@ -280,8 +302,13 @@ export default function UserDashboard() {
                           item.isPublic !== false && item.moderationStatus === 'approved';
                         return (
                           <TableRow key={item.id} className="hover:bg-muted/40">
+                            {/* Photo */}
                             <TableCell>
-                              <div className="relative h-12 w-12 rounded-md overflow-hidden bg-muted border flex items-center justify-center">
+                              <div
+                                className="relative h-12 w-12 rounded-md overflow-hidden bg-muted border flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                                onClick={() => openInspect(item)}
+                                title="Click to inspect"
+                              >
                                 {item.imageUrl ? (
                                   <img
                                     src={item.imageUrl}
@@ -294,13 +321,20 @@ export default function UserDashboard() {
                               </div>
                             </TableCell>
 
+                            {/* Item Name & Description */}
                             <TableCell>
-                              <div className="font-semibold text-sm">{item.name}</div>
+                              <div
+                                className="font-semibold text-sm hover:underline cursor-pointer"
+                                onClick={() => openInspect(item)}
+                              >
+                                {item.name}
+                              </div>
                               <div className="text-xs text-muted-foreground line-clamp-1 max-w-xs">
                                 {item.description}
                               </div>
                             </TableCell>
 
+                            {/* Type */}
                             <TableCell>
                               <Badge
                                 variant={item.status === 'lost' ? 'destructive' : 'secondary'}
@@ -310,9 +344,49 @@ export default function UserDashboard() {
                               </Badge>
                             </TableCell>
 
-                            <TableCell className="text-xs">{item.location}</TableCell>
-                            <TableCell className="text-xs text-muted-foreground">{item.date}</TableCell>
+                            {/* Category */}
+                            <TableCell className="text-xs">
+                              {item.category?.name || 'General'}
+                            </TableCell>
 
+                            {/* Reporter Info */}
+                            <TableCell>
+                              <div className="text-xs font-medium text-foreground">
+                                {item.reporterName || currentUser?.name || 'You'}
+                              </div>
+                              {item.reporterContact ? (
+                                <div className="text-[11px] text-muted-foreground flex items-center gap-1 mt-0.5">
+                                  {item.reporterContact.includes('@') ? (
+                                    <Mail className="w-3 h-3 text-primary flex-shrink-0" />
+                                  ) : (
+                                    <Phone className="w-3 h-3 text-emerald-600 flex-shrink-0" />
+                                  )}
+                                  <span className="truncate max-w-[130px]">
+                                    {item.reporterContact}
+                                  </span>
+                                </div>
+                              ) : currentUser?.email ? (
+                                <div className="text-[11px] text-muted-foreground flex items-center gap-1 mt-0.5">
+                                  <Mail className="w-3 h-3 text-primary flex-shrink-0" />
+                                  <span className="truncate max-w-[130px]">{currentUser.email}</span>
+                                </div>
+                              ) : null}
+                            </TableCell>
+
+
+                            {/* Location & Date */}
+                            <TableCell>
+                              <div className="text-xs font-medium flex items-center gap-1">
+                                <MapPin className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                                {item.location}
+                              </div>
+                              <div className="text-[11px] text-muted-foreground flex items-center gap-1 mt-0.5">
+                                <Calendar className="w-3 h-3 flex-shrink-0" />
+                                {item.date}
+                              </div>
+                            </TableCell>
+
+                            {/* Admin Status */}
                             <TableCell>
                               {isApproved ? (
                                 <Badge className="bg-emerald-500/10 text-emerald-700 border-emerald-300 text-xs gap-1">
@@ -324,17 +398,29 @@ export default function UserDashboard() {
                                 </Badge>
                               ) : (
                                 <Badge variant="outline" className="text-amber-600 bg-amber-50 text-xs gap-1">
-                                  <Clock className="w-3 h-3" /> Awaiting Admin Approval
+                                  <Clock className="w-3 h-3" /> Awaiting Approval
                                 </Badge>
                               )}
                             </TableCell>
 
+                            {/* Actions */}
                             <TableCell className="text-right">
-                              <Button asChild variant="ghost" size="sm" className="h-8 text-xs gap-1">
-                                <Link href={`/items/${item.id}`}>
-                                  View <ExternalLink className="w-3.5 h-3.5" />
-                                </Link>
-                              </Button>
+                              <div className="flex items-center justify-end gap-1.5">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="h-8 text-xs gap-1"
+                                  onClick={() => openInspect(item)}
+                                >
+                                  <Eye className="w-3.5 h-3.5" />
+                                  Inspect
+                                </Button>
+                                <Button asChild variant="ghost" size="sm" className="h-8 text-xs gap-1">
+                                  <Link href={`/items/${item.id}`}>
+                                    View <ExternalLink className="w-3.5 h-3.5" />
+                                  </Link>
+                                </Button>
+                              </div>
                             </TableCell>
                           </TableRow>
                         );
@@ -406,7 +492,9 @@ export default function UserDashboard() {
                           </TableCell>
                           <TableCell className="text-right">
                             <Button asChild variant="ghost" size="sm" className="h-8 text-xs">
-                              <Link href={`/items/${claim.itemId}`}>View Item</Link>
+                              <Link href={`/items/${claim.itemId}`}>
+                                View Item <ArrowRight className="w-3 h-3 ml-1" />
+                              </Link>
                             </Button>
                           </TableCell>
                         </TableRow>
@@ -419,6 +507,149 @@ export default function UserDashboard() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* ── Full Item Inspect Dialog ── */}
+      <Dialog open={inspectOpen} onOpenChange={setInspectOpen}>
+        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+          {selectedItem && (
+            <>
+              <DialogHeader>
+                <div className="flex items-center gap-2 mb-1">
+                  <Badge
+                    variant={selectedItem.status === 'lost' ? 'destructive' : 'secondary'}
+                    className="capitalize font-bold"
+                  >
+                    {selectedItem.status === 'lost' ? '🔍 Lost Item' : '🎁 Found Item'}
+                  </Badge>
+                  {selectedItem.isPublic !== false && selectedItem.moderationStatus === 'approved' ? (
+                    <Badge className="bg-emerald-500/10 text-emerald-700 border-emerald-300 text-xs">
+                      Publicly Visible
+                    </Badge>
+                  ) : (
+                    <Badge variant="outline" className="text-amber-600 bg-amber-50 text-xs">
+                      Pending Admin Review
+                    </Badge>
+                  )}
+                </div>
+                <DialogTitle className="text-2xl font-extrabold">{selectedItem.name}</DialogTitle>
+                <DialogDescription>
+                  Your Report ID: #{selectedItem.id}
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="space-y-4 py-2">
+                {/* Full Resolution Photo */}
+                {selectedItem.imageUrl && (
+                  <div className="relative h-64 w-full rounded-xl overflow-hidden bg-muted border flex items-center justify-center">
+                    <img
+                      src={selectedItem.imageUrl}
+                      alt={selectedItem.name}
+                      className="h-full w-full object-contain bg-black/5"
+                    />
+                  </div>
+                )}
+
+                {/* Full Description */}
+                <div>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1 flex items-center gap-1.5">
+                    <FileText className="w-3.5 h-3.5 text-primary" /> Full Description
+                  </h4>
+                  <p className="text-sm bg-muted/40 p-3.5 rounded-lg border text-foreground leading-relaxed">
+                    {selectedItem.description}
+                  </p>
+                </div>
+
+                {/* Metadata Grid */}
+                <div className="grid grid-cols-2 gap-3 text-xs">
+                  <div className="p-3 rounded-lg bg-card border space-y-1">
+                    <span className="text-muted-foreground flex items-center gap-1">
+                      <Tag className="w-3.5 h-3.5 text-primary" /> Category
+                    </span>
+                    <span className="font-semibold text-sm">
+                      {selectedItem.category?.name || 'General'}
+                    </span>
+                  </div>
+
+                  <div className="p-3 rounded-lg bg-card border space-y-1">
+                    <span className="text-muted-foreground flex items-center gap-1">
+                      <MapPin className="w-3.5 h-3.5 text-primary" /> Location Reported
+                    </span>
+                    <span className="font-semibold text-sm">{selectedItem.location}</span>
+                  </div>
+
+                  <div className="p-3 rounded-lg bg-card border space-y-1">
+                    <span className="text-muted-foreground flex items-center gap-1">
+                      <Calendar className="w-3.5 h-3.5 text-primary" /> Date Reported
+                    </span>
+                    <span className="font-semibold text-sm">{selectedItem.date}</span>
+                  </div>
+
+                  <div className="p-3 rounded-lg bg-card border space-y-1">
+                    <span className="text-muted-foreground flex items-center gap-1">
+                      <ShieldCheck className="w-3.5 h-3.5 text-primary" /> Moderation Status
+                    </span>
+                    <span className="font-semibold text-sm capitalize">
+                      {selectedItem.moderationStatus || 'pending'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Reporter Contact Information */}
+                <div className="p-4 rounded-xl bg-primary/5 border border-primary/20 space-y-3">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-primary flex items-center gap-1.5">
+                    <User className="w-3.5 h-3.5" /> Reporter Contact Details
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                    <div className="space-y-1">
+                      <span className="text-muted-foreground block">Reporter Name:</span>
+                      <span className="font-semibold text-sm text-foreground flex items-center gap-1">
+                        <User className="w-3.5 h-3.5 text-primary" />
+                        {selectedItem.reporterName || currentUser?.name || 'Anonymous Student'}
+                      </span>
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-muted-foreground block">
+                        {selectedItem.reporterContact?.includes('@') ? 'Email Address:' : 'Contact / Phone:'}
+                      </span>
+                      <span className="font-semibold text-sm text-foreground flex items-center gap-1 break-all">
+                        {selectedItem.reporterContact?.includes('@') ? (
+                          <Mail className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+                        ) : (
+                          <Phone className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
+                        )}
+                        {selectedItem.reporterContact || currentUser?.email || 'Not provided'}
+                      </span>
+                    </div>
+                    {currentUser?.studentId && (
+                      <div className="space-y-1">
+                        <span className="text-muted-foreground block">Student ID:</span>
+                        <span className="font-semibold text-sm text-foreground flex items-center gap-1 font-mono">
+                          <IdCard className="w-3.5 h-3.5 text-amber-600" />
+                          {currentUser.studentId}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+              </div>
+
+              <DialogFooter className="flex-col sm:flex-row gap-2 pt-2 border-t">
+                <Button variant="outline" onClick={() => setInspectOpen(false)}>
+                  Close
+                </Button>
+                <Button asChild>
+                  <Link href={`/items/${selectedItem.id}`}>
+                    <EyeOff className="w-4 h-4 mr-1.5" />
+                    View Public Listing
+                    <ExternalLink className="w-3.5 h-3.5 ml-1.5" />
+                  </Link>
+                </Button>
+              </DialogFooter>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

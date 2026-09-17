@@ -147,4 +147,16 @@ export const serverDb = {
     this.saveStudents(updated);
     return student;
   },
+
+  updateStudent(email: string, updates: Partial<StudentRecord>): StudentRecord | null {
+    const students = this.getStudents();
+    const idx = students.findIndex(
+      (s) => s.email.toLowerCase() === email.toLowerCase()
+    );
+    if (idx === -1) return null;
+    const updated = { ...students[idx], ...updates };
+    students[idx] = updated;
+    this.saveStudents(students);
+    return updated;
+  },
 };

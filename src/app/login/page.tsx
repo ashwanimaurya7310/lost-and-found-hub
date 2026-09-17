@@ -143,6 +143,12 @@ export default function LoginPage() {
                 <Label htmlFor="password" className="font-semibold text-xs">
                   Password
                 </Label>
+                <Link
+                  href="/forgot-password"
+                  className="text-[11px] text-muted-foreground hover:text-primary font-medium transition-colors"
+                >
+                  Forgot password?
+                </Link>
               </div>
               <Input id="password" type="password" placeholder="••••••••" {...register('password')} />
               {errors.password && (

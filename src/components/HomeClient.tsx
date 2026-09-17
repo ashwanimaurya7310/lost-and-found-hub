@@ -196,141 +196,241 @@ export default function HomeClient() {
     );
   }
 
-  // If NOT logged in (and not admin): Show centered Student Login page
+  // If NOT logged in (and not admin): Show creative blue login page
   if (!currentUser && !adminUser) {
+    const handleGoogleClick = () => {
+      setValue("identifier", "");
+      toast({
+        title: "Google Sign-in",
+        description: "Enter your Gmail address above and your password to sign in.",
+      });
+      setTimeout(() => document.getElementById("login-identifier")?.focus(), 100);
+    };
+
     return (
-      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4 bg-gradient-to-b from-background via-muted/20 to-muted/40">
-        <div className="w-full max-w-md space-y-4">
-          <Card className="shadow-2xl border-primary/20 bg-card/95 backdrop-blur">
-            <CardHeader className="text-center space-y-3 pb-4">
-              {/* College Logo */}
-              <div className="flex justify-center mb-1">
-                <Logo size="lg" />
+      <div
+        className="min-h-[calc(100vh-4rem)] relative flex items-center justify-center overflow-hidden px-4 py-8"
+        style={{ background: "linear-gradient(135deg, #5bbdf5 0%, #4aaee8 40%, #6ecbff 100%)" }}
+      >
+        {/* ── Background decorative circles ── */}
+        <div className="absolute top-[-110px] right-[-110px] w-80 h-80 rounded-full opacity-40 pointer-events-none" style={{ background: "#7fd4ff" }} />
+        <div className="absolute top-[-55px] right-[-55px] w-52 h-52 rounded-full opacity-25 pointer-events-none" style={{ background: "#9de3ff" }} />
+        <div className="absolute bottom-[-90px] left-[-90px] w-64 h-64 rounded-full opacity-30 pointer-events-none" style={{ background: "#7fd4ff" }} />
+        <div className="absolute top-[35%] left-[4%] w-20 h-20 rounded-full opacity-20 pointer-events-none" style={{ background: "#b8e8ff" }} />
+        {/* Big watermark letter */}
+        <div className="absolute bottom-0 left-[-10px] text-[240px] font-black leading-none select-none pointer-events-none opacity-20" style={{ color: "#3a9dd4" }}>
+          L
+        </div>
+        <div className="absolute bottom-0 right-[8%] text-[160px] font-black leading-none select-none pointer-events-none opacity-10" style={{ color: "#3a9dd4" }}>
+          &
+        </div>
+
+        {/* ── Main dark navy card ── */}
+        <div
+          className="relative z-10 w-full max-w-5xl rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row"
+          style={{ background: "linear-gradient(135deg, #0c2568 0%, #0a1e5c 50%, #0d2a80 100%)", minHeight: "520px" }}
+        >
+          {/* ── Left: decorative 3-D ribbon shapes ── */}
+          <div className="hidden md:flex flex-1 items-center justify-center relative overflow-hidden select-none" style={{ minHeight: "520px" }}>
+            {/* Dark blob circles */}
+            <div className="absolute bottom-[-30px] left-[-50px] w-52 h-52 rounded-full opacity-20" style={{ background: "#1a4fd6" }} />
+            <div className="absolute top-8 right-4 w-36 h-36 rounded-full opacity-10" style={{ background: "#1a4fd6" }} />
+
+            {/* SVG ribbons */}
+            <svg className="absolute inset-0 w-full h-full" viewBox="0 0 320 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="r1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#93c5fd" />
+                  <stop offset="50%" stopColor="#3b82f6" />
+                  <stop offset="100%" stopColor="#1e3a8a" />
+                </linearGradient>
+                <linearGradient id="r2" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#bfdbfe" />
+                  <stop offset="100%" stopColor="#2563eb" />
+                </linearGradient>
+                <linearGradient id="r3" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#60a5fa" />
+                  <stop offset="100%" stopColor="#1d4ed8" />
+                </linearGradient>
+                <linearGradient id="r4" x1="100%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#93c5fd" />
+                  <stop offset="100%" stopColor="#1e40af" />
+                </linearGradient>
+                <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#000" floodOpacity="0.35" />
+                </filter>
+              </defs>
+              {/* Large S-curve — left centre */}
+              <path d="M 70 60 C 200 60 220 160 110 220 C 0 280 30 380 180 400"
+                stroke="url(#r1)" strokeWidth="32" strokeLinecap="round" fill="none" filter="url(#shadow)" opacity="0.9" />
+              {/* Small C-curve below */}
+              <path d="M 30 340 C 80 290 130 380 60 420"
+                stroke="url(#r2)" strokeWidth="22" strokeLinecap="round" fill="none" filter="url(#shadow)" opacity="0.75" />
+              {/* Top-right corner ribbon */}
+              <path d="M 280 0 C 230 60 260 130 200 170 C 150 200 170 260 120 280"
+                stroke="url(#r4)" strokeWidth="26" strokeLinecap="round" fill="none" filter="url(#shadow)" opacity="0.55" />
+              {/* Bottom wavy squiggle */}
+              <path d="M 20 460 C 80 420 120 490 170 455 C 210 425 240 480 280 460"
+                stroke="url(#r3)" strokeWidth="20" strokeLinecap="round" fill="none" filter="url(#shadow)" opacity="0.6" />
+              {/* Small top-left blob squiggle */}
+              <path d="M 20 80 C 55 40 85 110 50 140"
+                stroke="url(#r2)" strokeWidth="18" strokeLinecap="round" fill="none" opacity="0.65" />
+              {/* Right-centre mini ribbon */}
+              <path d="M 240 260 C 270 230 290 290 260 310"
+                stroke="url(#r3)" strokeWidth="15" strokeLinecap="round" fill="none" opacity="0.5" />
+            </svg>
+          </div>
+
+          {/* ── Right: glassmorphism sign-in form ── */}
+          <div className="flex-1 flex items-center justify-center p-6 md:p-10">
+            <div
+              className="w-full max-w-sm rounded-2xl p-8 shadow-2xl border border-white/20"
+              style={{ background: "rgba(255,255,255,0.13)", backdropFilter: "blur(18px)", WebkitBackdropFilter: "blur(18px)" }}
+            >
+              {/* Header */}
+              <div className="mb-6">
+                <p className="text-blue-200/80 text-[11px] font-semibold tracking-widest uppercase mb-1">Lost &amp; Found Hub</p>
+                <h1 className="text-3xl font-extrabold text-white tracking-tight leading-tight">Sign in</h1>
               </div>
 
-              <div className="space-y-1">
-                <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
-                  <UserCheck className="w-3.5 h-3.5" />
-                  <span>Student & Member Portal</span>
-                </div>
-                <CardTitle className="text-2xl font-bold tracking-tight text-foreground">
-                  Student Sign In
-                </CardTitle>
-                <CardDescription className="text-xs text-muted-foreground">
-                  Enter your Gmail address or Student ID and password to access the Lost & Found portal.
-                </CardDescription>
-              </div>
-            </CardHeader>
-
-            <CardContent className="space-y-4 pt-2">
               <form onSubmit={handleSubmit(onLoginSubmit)} className="space-y-4">
-                {/* Identifier Address or ID */}
+                {/* Email / Student ID */}
                 <div className="space-y-1.5">
-                  <Label htmlFor="identifier" className="font-semibold text-xs text-foreground flex items-center justify-between">
-                    <span>Gmail Address or Student ID</span>
-                    <span className="text-[11px] text-muted-foreground font-normal">e.g. ASH-2024-001</span>
-                  </Label>
-                  <Input
-                    id="identifier"
-                    placeholder="student@ashoka.com or ASH-2024-001"
-                    className="h-10"
+                  <label htmlFor="login-identifier" className="text-sm font-semibold text-white/90">Email</label>
+                  <input
+                    id="login-identifier"
+                    placeholder="username@gmail.com or Student ID"
+                    autoComplete="username"
+                    className="w-full h-10 px-3 rounded-lg bg-white text-gray-800 text-sm placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-blue-400 transition"
                     {...register("identifier")}
                   />
                   {errors.identifier && (
-                    <p className="text-destructive text-xs font-medium">{errors.identifier.message}</p>
+                    <p className="text-red-300 text-xs font-medium">{errors.identifier.message}</p>
                   )}
                 </div>
 
                 {/* Password */}
                 <div className="space-y-1.5">
-                  <Label htmlFor="password" className="font-semibold text-xs text-foreground">
-                    Password
-                  </Label>
-                  <Input
-                    id="password"
+                  <label htmlFor="login-password" className="text-sm font-semibold text-white/90">Password</label>
+                  <input
+                    id="login-password"
                     type="password"
-                    placeholder="••••••••"
-                    className="h-10"
+                    placeholder="Password"
+                    autoComplete="current-password"
+                    className="w-full h-10 px-3 rounded-lg bg-white/90 text-gray-800 text-sm placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-blue-400 transition"
                     {...register("password")}
                   />
                   {errors.password && (
-                    <p className="text-destructive text-xs font-medium">{errors.password.message}</p>
+                    <p className="text-red-300 text-xs font-medium">{errors.password.message}</p>
                   )}
                 </div>
 
-                {/* Submit & Register Buttons Side-by-Side */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-                  <Button
-                    type="submit"
-                    className="w-full font-semibold py-5 shadow-sm text-xs bg-primary hover:bg-primary/90 text-primary-foreground flex items-center justify-center gap-1.5"
-                    disabled={isSubmitting}
-                  >
-                    <LogIn className="w-3.5 h-3.5" />
-                    {isSubmitting ? "Signing in..." : "Sign In"}
-                  </Button>
-
-                  <Button
-                    type="button"
-                    asChild
-                    variant="outline"
-                    className="w-full font-semibold text-xs py-5 border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/20 flex items-center justify-center gap-1.5"
-                  >
-                    <Link href="/signup">
-                      <UserPlus className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                      Register ID
-                    </Link>
-                  </Button>
+                {/* Forgot Password */}
+                <div className="text-left">
+                  <Link href="/forgot-password" className="text-xs text-blue-200/80 hover:text-white transition-colors">
+                    Forgot Password?
+                  </Link>
                 </div>
+
+                {/* Sign In button */}
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full h-11 rounded-lg font-bold text-sm text-white transition-all shadow-lg flex items-center justify-center gap-2 disabled:opacity-60 mt-1"
+                  style={{ background: "linear-gradient(135deg, #0a1f5c 0%, #0d2a80 100%)" }}
+                >
+                  <LogIn className="w-4 h-4" />
+                  {isSubmitting ? "Signing in…" : "Sign in"}
+                </button>
               </form>
 
-              {/* Quick Login Helper */}
-              <div className="pt-2 border-t flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
-                <span>Quick Logins:</span>
-                <div className="flex items-center gap-1.5">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleQuickFill}
-                    className="h-7 text-[11px] text-primary hover:text-primary/80 hover:bg-primary/10 px-2"
-                  >
-                    <Sparkles className="w-3 h-3 mr-1" />
-                    Fill Gmail
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleQuickFillId}
-                    className="h-7 text-[11px] text-amber-600 hover:text-amber-500 hover:bg-amber-500/10 px-2"
-                  >
-                    <IdCard className="w-3 h-3 mr-1" />
-                    Fill Student ID
-                  </Button>
-                </div>
+              {/* Social divider */}
+              <div className="flex items-center gap-3 my-5">
+                <div className="flex-1 h-px bg-white/20" />
+                <span className="text-[11px] text-white/50 font-medium whitespace-nowrap">or continue with</span>
+                <div className="flex-1 h-px bg-white/20" />
               </div>
-            </CardContent>
 
-            <CardFooter className="bg-muted/30 border-t p-4 flex flex-col gap-2.5 text-center">
-              <div className="w-full flex items-center justify-center text-xs">
-                <span className="text-muted-foreground mr-1.5">Need a Student ID?</span>
-                <Link href="/signup" className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline inline-flex items-center gap-1">
-                  Create Account here
-                  <ArrowRight className="w-3 h-3" />
+              {/* Social buttons */}
+              <div className="flex gap-3">
+                {/* Google */}
+                <button
+                  type="button"
+                  onClick={handleGoogleClick}
+                  title="Sign in with Google"
+                  className="flex-1 h-10 rounded-lg bg-white hover:bg-gray-50 active:scale-95 transition-all flex items-center justify-center shadow-sm"
+                >
+                  <svg viewBox="0 0 24 24" className="w-5 h-5">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                  </svg>
+                </button>
+
+                {/* GitHub */}
+                <button
+                  type="button"
+                  title="Sign in with GitHub"
+                  onClick={() => toast({ title: "GitHub Login", description: "Coming soon! Use email/password for now." })}
+                  className="flex-1 h-10 rounded-lg bg-white hover:bg-gray-50 active:scale-95 transition-all flex items-center justify-center shadow-sm"
+                >
+                  <svg viewBox="0 0 24 24" className="w-5 h-5" fill="#24292e">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+                  </svg>
+                </button>
+
+                {/* Facebook */}
+                <button
+                  type="button"
+                  title="Sign in with Facebook"
+                  onClick={() => toast({ title: "Facebook Login", description: "Coming soon! Use email/password for now." })}
+                  className="flex-1 h-10 rounded-lg bg-white hover:bg-gray-50 active:scale-95 transition-all flex items-center justify-center shadow-sm"
+                >
+                  <svg viewBox="0 0 24 24" className="w-5 h-5" fill="#1877F2">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                  </svg>
+                </button>
+              </div>
+
+              {/* Register link */}
+              <p className="text-center text-[12px] text-white/50 mt-5">
+                Don&apos;t have an account?{" "}
+                <Link href="/signup" className="text-white font-bold hover:underline">
+                  Register for free
                 </Link>
-              </div>
+              </p>
 
-              <div className="w-full flex items-center justify-center pt-2 border-t border-muted/80">
+              {/* Admin link */}
+              <div className="mt-3 pt-3 border-t border-white/10 text-center">
                 <Link
                   href="/admin/login"
-                  className="inline-flex items-center text-xs text-amber-600 dark:text-amber-400 font-semibold hover:underline gap-1.5"
+                  className="text-[11px] text-amber-300/70 hover:text-amber-300 transition-colors inline-flex items-center gap-1"
                 >
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  Administrator / Faculty Login Portal →
+                  <ShieldCheck className="w-3 h-3" />
+                  Administrator / Faculty Login →
                 </Link>
               </div>
-            </CardFooter>
-          </Card>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick-login dev helpers (small, bottom-right) */}
+        <div className="absolute bottom-4 right-4 z-20 flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity">
+          <button
+            type="button"
+            onClick={handleQuickFill}
+            className="text-[10px] text-white bg-white/10 hover:bg-white/20 border border-white/20 rounded-full px-2.5 py-1 font-medium backdrop-blur transition"
+          >
+            <Sparkles className="w-2.5 h-2.5 inline mr-1" />Demo Gmail
+          </button>
+          <button
+            type="button"
+            onClick={handleQuickFillId}
+            className="text-[10px] text-amber-200 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full px-2.5 py-1 font-medium backdrop-blur transition"
+          >
+            <IdCard className="w-2.5 h-2.5 inline mr-1" />Demo ID
+          </button>
         </div>
       </div>
     );
@@ -393,12 +493,6 @@ export default function HomeClient() {
               <Link href="/report">
                 <PlusCircle className="mr-1.5 h-4 w-4" />
                 Report Lost / Found Item
-              </Link>
-            </Button>
-            <Button asChild variant="outline" size="default">
-              <Link href="/dashboard">
-                <LayoutDashboard className="mr-1.5 h-4 w-4" />
-                My Dashboard
               </Link>
             </Button>
           </div>

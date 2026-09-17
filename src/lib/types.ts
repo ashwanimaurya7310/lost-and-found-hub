@@ -15,6 +15,8 @@ export interface StudentRecord {
   studentId: string;
   password?: string;
   registeredAt: string;
+  resetPasswordToken?: string;
+  resetPasswordExpiry?: string;
 }
 
 export interface Category {

@@ -20,7 +20,22 @@ import {
   DialogTrigger,
   DialogClose,
 } from '@/components/ui/dialog';
-import { Calendar, Tag, MapPin, ArrowLeft, ShieldCheck, CheckCircle2, Globe, Clock } from 'lucide-react';
+import {
+  Calendar,
+  Tag,
+  MapPin,
+  ArrowLeft,
+  CheckCircle2,
+  Globe,
+  Clock,
+  Mail,
+  Phone,
+  User,
+  IdCard,
+  MessageCircle,
+  Send,
+  PhoneCall,
+} from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 
@@ -56,6 +71,27 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
   }
 
   const isPublic = item.isPublic !== false && item.moderationStatus === 'approved';
+  const isFoundItem = item.status === 'found';
+  const isLostItem = item.status === 'lost';
+
+  // Build contact fields from item's reporter info
+  const reporterName = item.reporterName;
+  const reporterContact = item.reporterContact; // email or student ID stored here
+
+  // --- Aliases used by the "found" panel (finder) ---
+  const finderName = reporterName;
+  const finderContact = reporterContact;
+  // Detect if contact looks like an email
+  const isEmail = finderContact && finderContact.includes('@');
+  const finderEmail = isEmail ? finderContact : null;
+  // Phone detection: starts with + or digits
+  const isPhone = finderContact && /^[\+0-9]/.test(finderContact.replace(/\s/g, ''));
+  const finderPhone = !isEmail && isPhone ? finderContact : null;
+  // Student ID (fallback)
+  const finderStudentId =
+    !isEmail && !isPhone && finderContact ? finderContact : null;
+
+  const hasContactInfo = reporterName || finderEmail || finderPhone || finderStudentId;
 
   const handleClaimSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -187,6 +223,256 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
             </div>
           </div>
 
+          {/* ── Contact the Reporter Panel (Lost items only) ── */}
+          {isLostItem && isPublic && hasContactInfo && (
+            <div className="rounded-2xl border-2 border-rose-400/40 bg-gradient-to-br from-rose-50 to-rose-100/50 dark:from-rose-950/40 dark:to-rose-900/20 p-5 space-y-4 shadow-sm">
+              {/* Header */}
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-rose-500/20 flex items-center justify-center">
+                  <MessageCircle className="w-4 h-4 text-rose-600 dark:text-rose-400" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-sm text-rose-800 dark:text-rose-300">
+                    Contact the Reporter
+                  </h3>
+                  <p className="text-[11px] text-rose-700/70 dark:text-rose-400/70">
+                    Reach out to the person who reported this item lost
+                  </p>
+                </div>
+              </div>
+
+              <Separator className="bg-rose-200 dark:bg-rose-800" />
+
+              {/* Reporter Details */}
+              <div className="space-y-2.5">
+                {reporterName && (
+                  <div className="flex items-center gap-3 text-sm">
+                    <div className="w-7 h-7 rounded-full bg-rose-500/15 flex items-center justify-center flex-shrink-0">
+                      <User className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
+                    </div>
+                    <div>
+                      <span className="text-[11px] text-muted-foreground block">Reporter&apos;s Name</span>
+                      <span className="font-semibold text-foreground">{reporterName}</span>
+                    </div>
+                  </div>
+                )}
+
+                {finderEmail && (
+                  <div className="flex items-center gap-3 text-sm">
+                    <div className="w-7 h-7 rounded-full bg-blue-500/15 flex items-center justify-center flex-shrink-0">
+                      <Mail className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="text-[11px] text-muted-foreground block">Email Address</span>
+                      <a
+                        href={`mailto:${finderEmail}?subject=I Found Your ${encodeURIComponent(item.name)}&body=Hi ${reporterName || 'there'},%0A%0AI saw your lost item report for "${item.name}" at ${item.location}. I think I may have found it and would like to help return it.%0A%0AThank you!`}
+                        className="font-semibold text-blue-600 dark:text-blue-400 hover:underline break-all"
+                      >
+                        {finderEmail}
+                      </a>
+                    </div>
+                  </div>
+                )}
+
+                {finderPhone && (
+                  <div className="flex items-center gap-3 text-sm">
+                    <div className="w-7 h-7 rounded-full bg-violet-500/15 flex items-center justify-center flex-shrink-0">
+                      <Phone className="w-3.5 h-3.5 text-violet-600 dark:text-violet-400" />
+                    </div>
+                    <div>
+                      <span className="text-[11px] text-muted-foreground block">Phone Number</span>
+                      <a
+                        href={`tel:${finderPhone}`}
+                        className="font-semibold text-violet-600 dark:text-violet-400 hover:underline"
+                      >
+                        {finderPhone}
+                      </a>
+                    </div>
+                  </div>
+                )}
+
+                {finderStudentId && (
+                  <div className="flex items-center gap-3 text-sm">
+                    <div className="w-7 h-7 rounded-full bg-amber-500/15 flex items-center justify-center flex-shrink-0">
+                      <IdCard className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                    </div>
+                    <div>
+                      <span className="text-[11px] text-muted-foreground block">Student ID / Contact</span>
+                      <span className="font-semibold font-mono text-foreground">{finderStudentId}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-2 pt-1">
+                {finderEmail && (
+                  <Button
+                    asChild
+                    size="sm"
+                    className="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-semibold shadow-sm gap-2"
+                  >
+                    <a
+                      href={`mailto:${finderEmail}?subject=I Found Your ${encodeURIComponent(item.name)}&body=Hi ${reporterName || 'there'},%0A%0AI saw your lost item report for "${item.name}" at ${item.location}. I think I may have found it and would like to help return it.%0A%0AThank you!`}
+                    >
+                      <Send className="w-3.5 h-3.5" />
+                      Send Email
+                    </a>
+                  </Button>
+                )}
+
+                {finderPhone && (
+                  <Button
+                    asChild
+                    size="sm"
+                    variant="outline"
+                    className="flex-1 border-violet-300 text-violet-700 dark:text-violet-300 hover:bg-violet-50 dark:hover:bg-violet-950/30 font-semibold gap-2"
+                  >
+                    <a href={`tel:${finderPhone}`}>
+                      <PhoneCall className="w-3.5 h-3.5" />
+                      Call Reporter
+                    </a>
+                  </Button>
+                )}
+              </div>
+
+              <p className="text-[10px] text-muted-foreground leading-relaxed pt-1">
+                💡 <strong>Tip:</strong> When contacting the reporter, mention where and when you found the item so they can verify it&apos;s theirs.
+              </p>
+            </div>
+          )}
+
+          {/* ── Contact the Finder Panel (Found items only) ── */}
+          {isFoundItem && isPublic && hasContactInfo && (
+            <div className="rounded-2xl border-2 border-emerald-400/40 bg-gradient-to-br from-emerald-50 to-emerald-100/50 dark:from-emerald-950/40 dark:to-emerald-900/20 p-5 space-y-4 shadow-sm">
+              {/* Header */}
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                  <MessageCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-sm text-emerald-800 dark:text-emerald-300">
+                    Contact the Finder
+                  </h3>
+                  <p className="text-[11px] text-emerald-700/70 dark:text-emerald-400/70">
+                    Reach out directly to arrange the return of your item
+                  </p>
+                </div>
+              </div>
+
+              <Separator className="bg-emerald-200 dark:bg-emerald-800" />
+
+              {/* Finder Details */}
+              <div className="space-y-2.5">
+                {finderName && (
+                  <div className="flex items-center gap-3 text-sm">
+                    <div className="w-7 h-7 rounded-full bg-emerald-500/15 flex items-center justify-center flex-shrink-0">
+                      <User className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                    </div>
+                    <div>
+                      <span className="text-[11px] text-muted-foreground block">Finder&apos;s Name</span>
+                      <span className="font-semibold text-foreground">{finderName}</span>
+                    </div>
+                  </div>
+                )}
+
+                {finderEmail && (
+                  <div className="flex items-center gap-3 text-sm">
+                    <div className="w-7 h-7 rounded-full bg-blue-500/15 flex items-center justify-center flex-shrink-0">
+                      <Mail className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="text-[11px] text-muted-foreground block">Email Address</span>
+                      <a
+                        href={`mailto:${finderEmail}?subject=Regarding Found Item: ${encodeURIComponent(item.name)}&body=Hi ${finderName || 'there'},%0A%0AI saw that you found a "${item.name}" at ${item.location} on ${item.date}. I believe this belongs to me and would like to arrange a return.%0A%0AThank you!`}
+                        className="font-semibold text-blue-600 dark:text-blue-400 hover:underline break-all"
+                      >
+                        {finderEmail}
+                      </a>
+                    </div>
+                  </div>
+                )}
+
+                {finderPhone && (
+                  <div className="flex items-center gap-3 text-sm">
+                    <div className="w-7 h-7 rounded-full bg-violet-500/15 flex items-center justify-center flex-shrink-0">
+                      <Phone className="w-3.5 h-3.5 text-violet-600 dark:text-violet-400" />
+                    </div>
+                    <div>
+                      <span className="text-[11px] text-muted-foreground block">Phone Number</span>
+                      <a
+                        href={`tel:${finderPhone}`}
+                        className="font-semibold text-violet-600 dark:text-violet-400 hover:underline"
+                      >
+                        {finderPhone}
+                      </a>
+                    </div>
+                  </div>
+                )}
+
+                {finderStudentId && (
+                  <div className="flex items-center gap-3 text-sm">
+                    <div className="w-7 h-7 rounded-full bg-amber-500/15 flex items-center justify-center flex-shrink-0">
+                      <IdCard className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                    </div>
+                    <div>
+                      <span className="text-[11px] text-muted-foreground block">Student ID / Contact</span>
+                      <span className="font-semibold font-mono text-foreground">{finderStudentId}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-2 pt-1">
+                {finderEmail && (
+                  <Button
+                    asChild
+                    size="sm"
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-sm gap-2"
+                  >
+                    <a
+                      href={`mailto:${finderEmail}?subject=Regarding Found Item: ${encodeURIComponent(item.name)}&body=Hi ${finderName || 'there'},%0A%0AI saw that you found a "${item.name}" at ${item.location} on ${item.date}. I believe this belongs to me and would like to arrange a return.%0A%0AThank you!`}
+                    >
+                      <Send className="w-3.5 h-3.5" />
+                      Send Email
+                    </a>
+                  </Button>
+                )}
+
+                {finderPhone && (
+                  <Button
+                    asChild
+                    size="sm"
+                    variant="outline"
+                    className="flex-1 border-violet-300 text-violet-700 dark:text-violet-300 hover:bg-violet-50 dark:hover:bg-violet-950/30 font-semibold gap-2"
+                  >
+                    <a href={`tel:${finderPhone}`}>
+                      <PhoneCall className="w-3.5 h-3.5" />
+                      Call Finder
+                    </a>
+                  </Button>
+                )}
+              </div>
+
+              <p className="text-[10px] text-muted-foreground leading-relaxed pt-1">
+                💡 <strong>Tip:</strong> When contacting the finder, mention specific details about your item (color, brand, unique markings) so they can verify you are the rightful owner.
+              </p>
+            </div>
+          )}
+
+          {/* Fallback if found item but no contact info yet */}
+          {isFoundItem && isPublic && !hasContactInfo && (
+            <div className="rounded-xl border border-dashed border-amber-300 bg-amber-50/50 dark:bg-amber-950/20 p-4 text-center space-y-1">
+              <p className="text-xs font-semibold text-amber-700 dark:text-amber-400">
+                Contact info not available
+              </p>
+              <p className="text-[11px] text-muted-foreground">
+                The finder did not provide contact details. Use the claim button below to notify the admin.
+              </p>
+            </div>
+          )}
+
           {claimSubmitted && (
             <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-300 text-emerald-800 dark:text-emerald-300 flex items-center gap-3 text-sm">
               <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-600" />
@@ -197,8 +483,12 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
           {item.status === 'found' && (
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
-                <Button size="lg" className="w-full text-base font-semibold shadow-md py-6">
-                  Claim This Item
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-full text-base font-semibold py-6 border-2"
+                >
+                  Submit Formal Ownership Claim
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[480px]">
@@ -206,7 +496,7 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
                   <DialogHeader>
                     <DialogTitle>Claim Item: {item.name}</DialogTitle>
                     <DialogDescription>
-                      To claim this item, please provide specific details only the true owner would know (e.g. serial numbers, wallpaper, unique scratches).
+                      To formally claim this item, please provide specific details only the true owner would know (e.g. serial numbers, wallpaper, unique scratches). This will be reviewed by the admin.
                     </DialogDescription>
                   </DialogHeader>
                   <div className="grid gap-4 py-4">

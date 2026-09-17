@@ -24,6 +24,7 @@ import {
   Package,
   IdCard,
 } from 'lucide-react';
+
 import { Logo } from './logo';
 import { useToast } from '@/hooks/use-toast';
 
@@ -85,13 +86,6 @@ export function Header() {
               >
                 <Package className="w-3.5 h-3.5 text-emerald-400" />
                 <span>Found Items</span>
-              </Link>
-              <Link
-                href="/dashboard"
-                className="text-slate-300 hover:text-white px-3 py-1.5 rounded-md hover:bg-slate-800/60 transition-colors inline-flex items-center gap-1.5"
-              >
-                <LayoutDashboard className="w-3.5 h-3.5 text-primary" />
-                <span>Dashboard</span>
               </Link>
             </nav>
           )}

@@ -1,11 +1,20 @@
 [
   {
+    "id": "student_1789612501033_jqrd",
+    "name": "Nisha kushwaha",
+    "email": "mauryajii9473@gmail.com",
+    "phone": "9473883048",
+    "studentId": "5350024",
+    "password": "Nisha@123",
+    "registeredAt": "2026-09-17T02:35:01.033Z"
+  },
+  {
     "id": "student_1789032870244_9yif",
     "name": "Ashwani Maurya",
     "email": "ashwanimaurya7310@gmail.com",
     "phone": "7310314041",
     "studentId": "5350023",
-    "password": "Ashwani@641",
+    "password": "Ashwani@123",
     "registeredAt": "2026-09-10T09:34:30.244Z"
   },
   {
